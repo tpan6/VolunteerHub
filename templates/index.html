@@ -1,0 +1,219 @@
+{% extends "base.html" %}
+
+{% block title %}VolunteerHub - Make a Difference Today{% endblock %}
+
+{% block content %}
+<!-- Hero Section -->
+<div class="hero" style="background-image: url('https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=1600&q=80');">
+    <div class="hero-content">
+        <h1>Making a difference together.<br>One volunteer at a time.</h1>
+        <div class="hero-tagline">
+            We're connecting passionate individuals with meaningful opportunities. Everyone deserves the chance to give back and create lasting impact in their community.
+        </div>
+        <div class="hero-ctas">
+            <a href="{{ url_for('opportunities_map') }}" class="hero-btn">Find Opportunities</a>
+            <a href="{{ url_for('signup') }}" class="hero-btn">Start Volunteering</a>
+        </div>
+    </div>
+</div>
+
+<!-- Search Section -->
+<section class="search-section" id="search">
+    <div class="section-header">
+        <h2>Discover Your Perfect Match</h2>
+        <p>Search by location, cause, organization, or keyword</p>
+    </div>
+    <div class="search-wrapper">
+        <form action="{{ url_for('search') }}" method="GET">
+            <input type="text" 
+                   name="q" 
+                   class="search-input" 
+                   placeholder="Try 'food bank', 'education', or 'animal shelter'..."
+                   value="{{ request.args.get('q', '') }}">
+            <button type="submit" class="search-btn">Search</button>
+        </form>
+    </div>
+</section>
+
+<!-- Stats Section -->
+<section class="stats-section" style="background-image: url('https://images.unsplash.com/photo-1469571486292-0ba58a3f068b?w=1600&q=80'); position: relative;">
+    <div class="stats-grid">
+        <div class="stat-item">
+            <div class="stat-number">{{ stats.total_opportunities }}</div>
+            <div class="stat-label">Active Opportunities</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">{{ "{:,.0f}".format(stats.total_hours) }}</div>
+            <div class="stat-label">Volunteer Hours</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">{{ stats.total_volunteers }}</div>
+            <div class="stat-label">Volunteers</div>
+        </div>
+        <div class="stat-item">
+            <div class="stat-number">{{ stats.total_organizations }}</div>
+            <div class="stat-label">Organizations</div>
+        </div>
+    </div>
+</section>
+
+<!-- Featured Opportunities -->
+<section id="opportunities">
+    <div class="section-header">
+        <h2>Featured Opportunities</h2>
+        <p>Handpicked volunteer positions available this week</p>
+    </div>
+
+    <div class="opp-grid">
+        {% for opp in opportunities %}
+        <div class="opp-card">
+            <div class="opp-image" style="background-image: url('{{ opp.image_url or 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=500&q=80' }}');">
+                <div class="opp-badge">{{ opp.category or '🤝 Community' }}</div>
+            </div>
+            <div class="opp-content">
+                <div class="opp-title">{{ opp.title }}</div>
+                <div class="opp-org">{{ opp.organization.name if opp.organization else 'Independent' }}</div>
+                <div class="opp-details">
+                    <span class="detail-badge">📅 {{ opp.formatted_date }}</span>
+                    <span class="detail-badge">⏰ {% if opp.time_slots %}{{ opp.time_slots|length }} slots{% else %}TBD{% endif %}</span>
+                    <span class="detail-badge">⏱️ {{ opp.hours }} hours</span>
+                </div>
+                <div class="opp-footer">
+                    <div class="spots-left">
+                        <span>{{ opp.spots_remaining }}</span> spots left
+                    </div>
+                    <a href="{{ url_for('opportunity_detail', id=opp.id) }}" class="book-btn">View Details</a>
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+
+    <div class="text-center mt-4">
+        <a href="{{ url_for('opportunities_map') }}" class="btn btn-primary" style="padding: 18px 48px; font-size: 16px;">View All Opportunities</a>
+    </div>
+</section>
+
+<!-- For Organizations Section -->
+<section style="background: linear-gradient(135deg, #5fb3c5 0%, #0f4c5c 100%); color: white;">
+    <div style="max-width: 1200px; margin: 0 auto; display: grid; grid-template-columns: 1fr 1fr; gap: 60px; align-items: center;">
+        <div>
+            <h2 style="font-size: 42px; font-weight: 700; margin-bottom: 20px; color: white;">Are You an Organization?</h2>
+            <p style="font-size: 18px; line-height: 1.8; margin-bottom: 30px; opacity: 0.95;">
+                Connect with passionate volunteers ready to support your mission. Post opportunities, manage bookings, and grow your impact.
+            </p>
+            <ul style="list-style: none; padding: 0; margin-bottom: 30px;">
+                <li style="padding: 12px 0; font-size: 16px; display: flex; align-items: center;">
+                    <span style="background: rgba(255,255,255,0.2); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 20px;">✓</span>
+                    Post unlimited volunteer opportunities
+                </li>
+                <li style="padding: 12px 0; font-size: 16px; display: flex; align-items: center;">
+                    <span style="background: rgba(255,255,255,0.2); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 20px;">✓</span>
+                    Manage volunteers and track hours
+                </li>
+                <li style="padding: 12px 0; font-size: 16px; display: flex; align-items: center;">
+                    <span style="background: rgba(255,255,255,0.2); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 20px;">✓</span>
+                    OpenTable-style booking system
+                </li>
+                <li style="padding: 12px 0; font-size: 16px; display: flex; align-items: center;">
+                    <span style="background: rgba(255,255,255,0.2); width: 40px; height: 40px; border-radius: 50%; display: flex; align-items: center; justify-content: center; margin-right: 15px; font-size: 20px;">✓</span>
+                    Dedicated organization dashboard
+                </li>
+            </ul>
+            <div style="display: flex; gap: 15px;">
+                <a href="{{ url_for('organization_signup') }}" class="btn" style="background: white; color: #0f4c5c; padding: 16px 36px; font-size: 16px; border-radius: 8px; font-weight: 700; text-decoration: none;">
+                    Register Your Organization
+                </a>
+                <a href="{{ url_for('organization_login') }}" class="btn" style="background: rgba(255,255,255,0.15); color: white; border: 2px solid white; padding: 16px 36px; font-size: 16px; border-radius: 8px; font-weight: 600; text-decoration: none;">
+                    Organization Login
+                </a>
+            </div>
+        </div>
+        <div style="position: relative;">
+            <div style="background: rgba(255,255,255,0.1); backdrop-filter: blur(10px); border-radius: 20px; padding: 40px; border: 2px solid rgba(255,255,255,0.2);">
+                <div style="text-align: center; margin-bottom: 30px;">
+                    <div style="font-size: 80px; margin-bottom: 20px;">🏢</div>
+                    <h3 style="font-size: 28px; margin-bottom: 15px; color: white;">Join 100+ Organizations</h3>
+                    <p style="opacity: 0.9; font-size: 16px;">Already using VolunteerHub to recruit and manage volunteers</p>
+                </div>
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 20px; margin-top: 30px;">
+                    <div style="text-align: center; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 12px;">
+                        <div style="font-size: 32px; font-weight: 700; color: white;">1,500+</div>
+                        <div style="font-size: 14px; opacity: 0.9;">Active Volunteers</div>
+                    </div>
+                    <div style="text-align: center; padding: 20px; background: rgba(255,255,255,0.1); border-radius: 12px;">
+                        <div style="font-size: 32px; font-weight: 700; color: white;">5,000+</div>
+                        <div style="font-size: 14px; opacity: 0.9;">Hours Logged</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+<!-- How It Works -->
+<section style="background: #f8f9fa;">
+    <div class="section-header">
+        <h2>How It Works</h2>
+        <p>Getting started is easy and takes just a few minutes</p>
+    </div>
+    <div style="max-width: 1000px; margin: 0 auto; display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px;">
+        <div style="text-align: center;">
+            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #5fb3c5 0%, #0f4c5c 100%); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 40px; color: white;">1</div>
+            <h3 style="margin-bottom: 12px; color: #0f4c5c;">Search & Discover</h3>
+            <p style="color: #6c757d;">Browse opportunities by location, cause, or date that match your interests and schedule.</p>
+        </div>
+        <div style="text-align: center;">
+            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #5fb3c5 0%, #0f4c5c 100%); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 40px; color: white;">2</div>
+            <h3 style="margin-bottom: 12px; color: #0f4c5c;">Book Your Slot</h3>
+            <p style="color: #6c757d;">Reserve your spot with our easy booking system. Get instant confirmation and reminders.</p>
+        </div>
+        <div style="text-align: center;">
+            <div style="width: 80px; height: 80px; background: linear-gradient(135deg, #5fb3c5 0%, #0f4c5c 100%); border-radius: 50%; margin: 0 auto 20px; display: flex; align-items: center; justify-content: center; font-size: 40px; color: white;">3</div>
+            <h3 style="margin-bottom: 12px; color: #0f4c5c;">Make an Impact</h3>
+            <p style="color: #6c757d;">Show up, volunteer, and track your hours. Build your volunteer portfolio and earn badges.</p>
+        </div>
+    </div>
+</section>
+
+<!-- Call to Action -->
+<section style="background: linear-gradient(rgba(15, 76, 92, 0.85), rgba(15, 76, 92, 0.85)), url('https://images.unsplash.com/photo-1488521787991-ed7bbaae773c?w=1600&q=80'); background-size: cover; background-position: center; background-attachment: fixed; color: white; text-align: center;">
+    <div style="max-width: 800px; margin: 0 auto;">
+        <h2 style="font-size: 48px; font-weight: 300; margin-bottom: 30px;">Your Time Creates Real Impact</h2>
+        <p style="font-size: 20px; line-height: 1.8; margin-bottom: 40px;">Join thousands of volunteers who have contributed to making our community stronger. Every hour matters, every person counts.</p>
+        <a href="{{ url_for('signup') }}" class="btn" style="background: white; color: #0f4c5c; padding: 18px 40px; font-size: 16px; border-radius: 8px;">Start Volunteering Today</a>
+    </div>
+</section>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Navbar scroll effect
+    window.addEventListener('scroll', function() {
+        const navbar = document.getElementById('navbar');
+        if (window.scrollY > 100) {
+            navbar.classList.add('scrolled');
+        } else {
+            navbar.classList.remove('scrolled');
+        }
+    });
+
+    // Auto-hide flash messages
+    setTimeout(function() {
+        const flashContainer = document.querySelector('.flash-container');
+        if (flashContainer) {
+            flashContainer.style.animation = 'slideOut 0.3s ease forwards';
+            setTimeout(() => flashContainer.remove(), 300);
+        }
+    }, 5000);
+</script>
+
+<style>
+    @keyframes slideOut {
+        to {
+            opacity: 0;
+            transform: translateX(100px);
+        }
+    }
+</style>
+{% endblock %}

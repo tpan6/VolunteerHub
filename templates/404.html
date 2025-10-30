@@ -1,0 +1,35 @@
+{% extends "base.html" %}
+
+{% block title %}Page Not Found - VolunteerHub{% endblock %}
+
+{% block content %}
+<div style="min-height: 80vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+    <div style="text-align: center; max-width: 600px; padding: 40px;">
+        <div style="font-size: 120px; margin-bottom: 20px;">🤷</div>
+        <h1 style="font-size: 48px; color: #0f4c5c; margin-bottom: 20px;">404</h1>
+        <h2 style="font-size: 32px; color: #2c3e50; margin-bottom: 20px;">Page Not Found</h2>
+        <p style="font-size: 18px; color: #6c757d; margin-bottom: 40px; line-height: 1.6;">
+            Oops! The page you're looking for seems to have wandered off. Maybe it's out volunteering! 
+            Let's get you back on track.
+        </p>
+        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <a href="{{ url_for('index') }}" class="btn btn-primary" style="padding: 14px 32px; font-size: 16px;">
+                Go Home
+            </a>
+            <a href="{{ url_for('opportunities_map') }}" class="btn btn-secondary" style="padding: 14px 32px; font-size: 16px;">
+                Browse Opportunities
+            </a>
+            <a href="{{ url_for('search') }}" class="btn" style="padding: 14px 32px; font-size: 16px; background: white; border: 2px solid #dee2e6; color: #2c3e50;">
+                Search
+            </a>
+        </div>
+        
+        <div style="margin-top: 60px; padding-top: 40px; border-top: 1px solid #dee2e6;">
+            <p style="color: #6c757d; font-size: 14px;">
+                If you believe this is an error, please 
+                <a href="mailto:support@volunteerhub.org" style="color: #0f4c5c; text-decoration: none; font-weight: 600;">contact support</a>
+            </p>
+        </div>
+    </div>
+</div>
+{% endblock %}

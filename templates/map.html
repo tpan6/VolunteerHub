@@ -1,0 +1,512 @@
+{% extends "base.html" %}
+
+{% block title %}Browse Opportunities Map - VolunteerHub{% endblock %}
+
+{% block extra_css %}
+<style>
+    .map-container {
+        display: grid;
+        grid-template-columns: 1fr 400px;
+        gap: 0;
+        height: calc(100vh - 80px);
+        margin-top: 80px;
+    }
+
+    #map {
+        height: 100%;
+        width: 100%;
+    }
+
+    .sidebar {
+        background: #f8f9fa;
+        height: 100%;
+        overflow-y: auto;
+        padding: 30px;
+    }
+
+    .sidebar h2 {
+        color: #0f4c5c;
+        margin-bottom: 20px;
+        font-size: 28px;
+    }
+
+    .filter-section {
+        margin-bottom: 30px;
+    }
+
+    .filter-section h3 {
+        font-size: 16px;
+        font-weight: 600;
+        margin-bottom: 12px;
+        color: #2c3e50;
+    }
+
+    .filter-group {
+        margin-bottom: 15px;
+    }
+
+    .filter-group label {
+        display: block;
+        margin-bottom: 6px;
+        font-weight: 500;
+        font-size: 14px;
+    }
+
+    .filter-group input,
+    .filter-group select {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #dee2e6;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    .filter-btn {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #0f4c5c 0%, #1a7a8a 100%);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 10px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(15, 76, 92, 0.3);
+    }
+
+    .filter-btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .filter-btn:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .filter-btn:hover {
+        background: linear-gradient(135deg, #0d3d4a 0%, #156570 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(15, 76, 92, 0.4);
+    }
+
+    .filter-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 6px rgba(15, 76, 92, 0.3);
+    }
+
+    .clear-btn {
+        width: 100%;
+        padding: 10px;
+        background: white;
+        color: #0f4c5c;
+        border: 2px solid #0f4c5c;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .clear-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(15, 76, 92, 0.1), transparent);
+        transition: left 0.5s;
+    }
+
+    .clear-btn:hover::before {
+        left: 100%;
+    }
+
+    .clear-btn:hover {
+        background: #f8f9fa;
+        border-color: #0d3d4a;
+        color: #0d3d4a;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(15, 76, 92, 0.15);
+    }
+
+    .clear-btn:active {
+        transform: translateY(0);
+    }
+
+    .opportunities-list {    .clear-btn:hover {
+        background: #f8f9fa;
+    }
+
+    .opportunities-list {
+        margin-top: 30px;
+    }
+
+    .opportunity-item {
+        background: white;
+        padding: 20px;
+        border-radius: 8px;
+        margin-bottom: 15px;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .opportunity-item:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    .opportunity-item h4 {
+        color: #0f4c5c;
+        font-size: 18px;
+        margin-bottom: 8px;
+    }
+
+    .opportunity-item .org {
+        color: #6c757d;
+        font-size: 13px;
+        margin-bottom: 10px;
+    }
+
+    .opportunity-item .details {
+        display: flex;
+        gap: 8px;
+        flex-wrap: wrap;
+        font-size: 12px;
+    }
+
+    .opportunity-item .tag {
+        background: #f8f9fa;
+        padding: 4px 10px;
+        border-radius: 4px;
+        color: #495057;
+    }
+
+    @media (max-width: 1024px) {
+        .map-container {
+            grid-template-columns: 1fr;
+            height: auto;
+        }
+
+        #map {
+            height: 500px;
+        }
+
+        .sidebar {
+            height: auto;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="map-container">
+    <!-- Map -->
+    <div id="map"></div>
+
+    <!-- Sidebar -->
+    <div class="sidebar">
+        <h2>🗺️ Browse Opportunities</h2>
+        
+        <!-- Search -->
+        <div class="filter-section">
+            <input type="text" 
+                   id="searchInput" 
+                   placeholder="🔍 Search by name or keyword..." 
+                   style="width: 100%; padding: 12px; border: 2px solid #dee2e6; border-radius: 6px;">
+        </div>
+
+        <!-- Filters -->
+        <div class="filter-section">
+            <h3>Filters</h3>
+            
+            <div class="filter-group">
+                <label for="categoryFilter">Category</label>
+                <select id="categoryFilter">
+                    <option value="">All Categories</option>
+                    <option value="Environment">🌳 Environment</option>
+                    <option value="Education">📚 Education</option>
+                    <option value="Food Security">🍲 Food Security</option>
+                    <option value="Animal Welfare">🐕 Animal Welfare</option>
+                    <option value="Technology">👨‍🏫 Technology</option>
+                    <option value="Healthcare">🏥 Healthcare</option>
+                </select>
+            </div>
+
+            <div class="filter-group">
+                <label for="dateFilter">Date</label>
+                <input type="date" id="dateFilter">
+            </div>
+
+            <div class="filter-group">
+                <label for="hoursFilter">Time Slots Available</label>
+                <select id="hoursFilter">
+                    <option value="">Any Amount</option>
+                    <option value="1">1 slot</option>
+                    <option value="2">2 slots</option>
+                    <option value="3">3 slots</option>
+                    <option value="4+">4+ slots</option>
+                </select>
+            </div>
+
+            <button class="filter-btn" onclick="applyFilters()">Apply Filters</button>
+            <button class="clear-btn" onclick="clearFilters()">Clear All</button>
+        </div>
+
+        <!-- Recommendations -->
+        <div class="filter-section">
+            <h3>📍 Recommended for You</h3>
+            <p style="font-size: 13px; color: #6c757d; margin-bottom: 10px;">Based on your location and interests</p>
+            <div id="recommendations">
+                <!-- Will be populated by JavaScript -->
+            </div>
+        </div>
+
+        <!-- List of Opportunities -->
+        <div class="opportunities-list">
+            <h3 style="margin-bottom: 15px;"><span id="listTitle">All Opportunities</span> (<span id="oppCount">{{ opportunities|length }}</span>)</h3>
+            <div id="opportunitiesList">
+                {% for opp in opportunities %}
+                <div class="opportunity-item" onclick="focusOnMarker({{ opp.id }})" data-id="{{ opp.id }}" data-category="{{ opp.category }}" data-date="{{ opp.formatted_date }}" data-slots="{{ opp.time_slots|length }}">
+                    <h4>{{ opp.title }}</h4>
+                    <div class="org">{{ opp.organization.name if opp.organization else 'Independent' }}</div>
+                    <div class="details">
+                        <span class="tag">📅 {{ opp.formatted_date }}</span>
+                        <span class="tag">⏰ {% if opp.time_slots %}{{ opp.time_slots|length }} slots{% else %}TBD{% endif %}</span>
+                        <span class="tag">⏱️ {{ opp.hours }}h</span>
+                        <span class="tag">{{ opp.spots_remaining }} spots</span>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<!-- Google Maps API -->
+<script>
+    // Initialize map
+    let map;
+    let markers = {};
+    let infoWindow;
+
+    async function initMap() {
+        // The location of Boston
+        const position = { lat: 42.3601, lng: -71.0589 };
+        
+        // Request needed libraries
+        const { Map } = await google.maps.importLibrary("maps");
+        const { AdvancedMarkerElement, PinElement } = await google.maps.importLibrary("marker");
+        
+        // Create the map
+        map = new Map(document.getElementById("map"), {
+            zoom: 12,
+            center: position,
+            mapId: "VOLUNTEER_MAP", // Required for advanced markers
+        });
+
+        // Create info window
+        infoWindow = new google.maps.InfoWindow();
+
+        // Opportunities data
+        const opportunities = {{ opportunities_json | tojson | safe }};
+
+        // Add markers
+        opportunities.forEach(opp => {
+            if (opp.latitude && opp.longitude) {
+                // Create custom pin
+                const pinElement = new PinElement({
+                    background: "#0f4c5c",
+                    borderColor: "#ffffff",
+                    glyphColor: "#ffffff",
+                    scale: 1.2,
+                });
+
+                const marker = new AdvancedMarkerElement({
+                    map: map,
+                    position: { lat: opp.latitude, lng: opp.longitude },
+                    content: pinElement.element,
+                    title: opp.title,
+                });
+
+                // Add click listener
+                marker.addListener("click", () => {
+                    const timeDisplay = opp.time_slots && opp.time_slots.length > 0 
+                        ? opp.time_slots.join(', ')
+                        : 'TBD';
+                    
+                    infoWindow.setContent(`
+                        <div style="padding: 10px; min-width: 200px;">
+                            <div style="font-weight: 600; font-size: 16px; color: #0f4c5c; margin-bottom: 8px;">${opp.title}</div>
+                            <div style="color: #6c757d; font-size: 14px; margin-bottom: 8px;">${opp.organization}</div>
+                            <div style="font-size: 14px; margin-bottom: 8px;">
+                                📅 ${opp.date}<br>
+                                ⏰ ${timeDisplay}<br>
+                                ⏱️ ${opp.hours} hours
+                            </div>
+                            <a href="/opportunity/${opp.id}" style="display: inline-block; padding: 8px 16px; background: #0f4c5c; color: white; text-decoration: none; border-radius: 4px; font-size: 14px; font-weight: 600; margin-top: 8px;">View Details</a>
+                        </div>
+                    `);
+                    infoWindow.open(map, marker);
+                });
+
+                markers[opp.id] = marker;
+            }
+        });
+    }
+
+    // Focus on marker when clicking list item
+    function focusOnMarker(id) {
+        if (markers[id]) {
+            const position = markers[id].position;
+            map.setCenter(position);
+            map.setZoom(15);
+            
+            // Trigger click event to show info window
+            google.maps.event.trigger(markers[id], 'click');
+        }
+    }
+
+    // Search functionality
+    document.addEventListener('DOMContentLoaded', function() {
+        document.getElementById('searchInput').addEventListener('input', function(e) {
+            const searchTerm = e.target.value.toLowerCase();
+            const items = document.querySelectorAll('.opportunity-item');
+            let visibleCount = 0;
+            
+            items.forEach(item => {
+                const text = item.textContent.toLowerCase();
+                if (text.includes(searchTerm)) {
+                    item.style.display = 'block';
+                    visibleCount++;
+                } else {
+                    item.style.display = 'none';
+                }
+            });
+            
+            // Update title and count
+            document.getElementById('listTitle').textContent = searchTerm ? 'Filtered Opportunities' : 'All Opportunities';
+            document.getElementById('oppCount').textContent = visibleCount;
+        });
+    });
+
+    // Apply filters
+    function applyFilters() {
+        const category = document.getElementById('categoryFilter').value;
+        const date = document.getElementById('dateFilter').value;
+        const slots = document.getElementById('hoursFilter').value;
+        
+        const items = document.querySelectorAll('.opportunity-item');
+        let visibleCount = 0;
+        
+        items.forEach(item => {
+            let show = true;
+            const itemCategory = item.getAttribute('data-category');
+            const itemDate = item.getAttribute('data-date');
+            const itemSlots = parseInt(item.getAttribute('data-slots'));
+            const itemId = item.getAttribute('data-id');
+            
+            // Check category filter
+            if (category && itemCategory !== category) show = false;
+            
+            // Check date filter
+            if (date) {
+                const filterDate = new Date(date);
+                const formattedFilterDate = filterDate.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+                if (!itemDate.includes(formattedFilterDate)) show = false;
+            }
+            
+            // Check time slots filter
+            if (slots) {
+                if (slots === '1' && itemSlots !== 1) show = false;
+                if (slots === '2' && itemSlots !== 2) show = false;
+                if (slots === '3' && itemSlots !== 3) show = false;
+                if (slots === '4+' && itemSlots < 4) show = false;
+            }
+            
+            // Show/hide list item
+            item.style.display = show ? 'block' : 'none';
+            
+            // Show/hide map marker
+            if (markers[itemId]) {
+                markers[itemId].map = show ? map : null;
+            }
+            
+            if (show) visibleCount++;
+        });
+        
+        // Update title and count
+        const hasFilters = category || date || slots;
+        document.getElementById('listTitle').textContent = hasFilters ? 'Filtered Opportunities' : 'All Opportunities';
+        document.getElementById('oppCount').textContent = visibleCount;
+    }
+
+    // Clear filters
+    function clearFilters() {
+        document.getElementById('categoryFilter').value = '';
+        document.getElementById('dateFilter').value = '';
+        document.getElementById('hoursFilter').value = '';
+        document.getElementById('searchInput').value = '';
+        
+        const items = document.querySelectorAll('.opportunity-item');
+        items.forEach(item => {
+            item.style.display = 'block';
+            const itemId = item.getAttribute('data-id');
+            if (markers[itemId]) {
+                markers[itemId].map = map;
+            }
+        });
+        
+        // Reset title and count
+        document.getElementById('listTitle').textContent = 'All Opportunities';
+        document.getElementById('oppCount').textContent = items.length;
+    }
+
+    // Load recommendations (nearby opportunities)
+    function loadRecommendations() {
+        const opportunities = {{ opportunities_json | tojson | safe }};
+        const recDiv = document.getElementById('recommendations');
+        const nearby = opportunities.slice(0, 3);
+        
+        nearby.forEach(opp => {
+            recDiv.innerHTML += `
+                <div style="background: white; padding: 12px; border-radius: 6px; margin-bottom: 10px; cursor: pointer;" onclick="focusOnMarker(${opp.id})">
+                    <div style="font-weight: 600; font-size: 14px; color: #0f4c5c; margin-bottom: 4px;">${opp.title}</div>
+                    <div style="font-size: 12px; color: #6c757d;">📍 Near you • ${opp.date}</div>
+                </div>
+            `;
+        });
+    }
+
+    // Initialize recommendations when page loads
+    window.addEventListener('load', loadRecommendations);
+</script>
+
+<!-- Load Google Maps API -->
+{% if GOOGLE_MAPS_API_KEY and GOOGLE_MAPS_API_KEY != 'your-google-maps-api-key-here' %}
+<script src="https://maps.googleapis.com/maps/api/js?key={{ GOOGLE_MAPS_API_KEY }}&callback=initMap&libraries=marker&v=weekly" async defer></script>
+{% else %}
+<script>
+    // Show error message if API key is not configured
+    window.addEventListener('load', function() {
+        document.getElementById('map').innerHTML = '<div style="display: flex; align-items: center; justify-content: center; height: 100%; background: #f8f9fa; color: #0f4c5c; font-size: 18px; font-weight: 600; text-align: center; padding: 20px;">⚠️ Google Maps API Key not configured.<br>Please add your API key to continue.</div>';
+    });
+</script>
+{% endif %}
+{% endblock %}

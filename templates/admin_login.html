@@ -1,0 +1,163 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Login - VolunteerHub{% endblock %}
+
+{% block extra_css %}
+<style>
+    .admin-login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #0f4c5c 0%, #1a7a8a 100%);
+        padding: 20px;
+    }
+
+    .admin-login-box {
+        background: white;
+        padding: 50px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 450px;
+        width: 100%;
+    }
+
+    .admin-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .admin-header .icon {
+        font-size: 64px;
+        margin-bottom: 20px;
+    }
+
+    .admin-header h1 {
+        color: #0f4c5c;
+        font-size: 32px;
+        margin-bottom: 8px;
+    }
+
+    .admin-header p {
+        color: #6c757d;
+        font-size: 14px;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 14px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 14px;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #0f4c5c;
+        box-shadow: 0 0 0 3px rgba(15, 76, 92, 0.1);
+    }
+
+    .admin-btn {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #0f4c5c 0%, #1a7a8a 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(15, 76, 92, 0.3);
+    }
+
+    .admin-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(15, 76, 92, 0.4);
+    }
+
+    .admin-btn:active {
+        transform: translateY(0);
+    }
+
+    .back-link {
+        text-align: center;
+        margin-top: 25px;
+    }
+
+    .back-link a {
+        color: #6c757d;
+        text-decoration: none;
+        font-size: 14px;
+        transition: color 0.3s ease;
+    }
+
+    .back-link a:hover {
+        color: #0f4c5c;
+    }
+
+    .alert {
+        padding: 14px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+
+    .alert-danger {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-login-container">
+    <div class="admin-login-box">
+        <div class="admin-header">
+            <div class="icon">🔐</div>
+            <h1>Admin Portal</h1>
+            <p>Authorized Access Only</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="admin@volunteerhub.com">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+            </div>
+
+            <button type="submit" class="admin-btn">Sign In to Admin Portal</button>
+        </form>
+
+        <div class="back-link">
+            <a href="{{ url_for('index') }}">← Back to Main Site</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

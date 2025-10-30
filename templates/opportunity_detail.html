@@ -1,0 +1,348 @@
+{% extends "base.html" %}
+
+{% block title %}{{ opportunity.title }} - VolunteerHub{% endblock %}
+
+{% block extra_css %}
+<style>
+    .detail-container {
+        max-width: 1200px;
+        margin: 120px auto 60px;
+        padding: 0 60px;
+    }
+
+    .detail-hero {
+        height: 400px;
+        background-size: cover;
+        background-position: center;
+        border-radius: 12px;
+        margin-bottom: 40px;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .detail-hero::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background: linear-gradient(to bottom, rgba(0,0,0,0.2), rgba(0,0,0,0.6));
+    }
+
+    .detail-hero-content {
+        position: absolute;
+        bottom: 40px;
+        left: 40px;
+        color: white;
+        z-index: 1;
+    }
+
+    .detail-hero-content h1 {
+        font-size: 48px;
+        margin-bottom: 12px;
+    }
+
+    .detail-hero-content .org {
+        font-size: 20px;
+        opacity: 0.9;
+    }
+
+    .detail-grid {
+        display: grid;
+        grid-template-columns: 2fr 1fr;
+        gap: 40px;
+    }
+
+    .detail-main {
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+    }
+
+    .detail-sidebar {
+        position: sticky;
+        top: 100px;
+        height: fit-content;
+    }
+
+    .info-card {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 20px;
+    }
+
+    .info-card h3 {
+        color: #0f4c5c;
+        margin-bottom: 20px;
+        font-size: 20px;
+    }
+
+    .info-item {
+        display: flex;
+        align-items: start;
+        gap: 12px;
+        margin-bottom: 15px;
+        font-size: 15px;
+    }
+
+    .info-item .icon {
+        font-size: 20px;
+        min-width: 24px;
+    }
+
+    .info-item .label {
+        font-weight: 600;
+        color: #2c3e50;
+        min-width: 100px;
+    }
+
+    .info-item .value {
+        color: #6c757d;
+    }
+
+    .section {
+        margin-bottom: 40px;
+    }
+
+    .section h2 {
+        color: #0f4c5c;
+        font-size: 28px;
+        margin-bottom: 16px;
+    }
+
+    .section p {
+        line-height: 1.8;
+        color: #2c3e50;
+        font-size: 16px;
+    }
+
+    .section ul {
+        margin-left: 20px;
+        color: #2c3e50;
+    }
+
+    .section ul li {
+        margin-bottom: 8px;
+        line-height: 1.6;
+    }
+
+    .badge-large {
+        display: inline-block;
+        background: #f8f9fa;
+        padding: 10px 20px;
+        border-radius: 8px;
+        margin-right: 10px;
+        margin-bottom: 10px;
+        font-weight: 600;
+        color: #495057;
+    }
+
+    .book-cta {
+        background: linear-gradient(135deg, #5fb3c5 0%, #0f4c5c 100%);
+        color: white;
+        padding: 20px;
+        border-radius: 12px;
+        text-align: center;
+        margin-top: 20px;
+    }
+
+    .book-cta h3 {
+        color: white;
+        margin-bottom: 15px;
+    }
+
+    .book-cta .spots {
+        font-size: 36px;
+        font-weight: 300;
+        margin-bottom: 10px;
+    }
+
+    .book-cta .spots-label {
+        font-size: 14px;
+        opacity: 0.9;
+        margin-bottom: 20px;
+    }
+
+    .book-cta .btn {
+        width: 100%;
+        padding: 16px;
+        background: white;
+        color: #0f4c5c;
+        border: none;
+        border-radius: 8px;
+        font-weight: 700;
+        font-size: 16px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .book-cta .btn:hover {
+        transform: scale(1.05);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.2);
+    }
+
+    @media (max-width: 1024px) {
+        .detail-grid {
+            grid-template-columns: 1fr;
+        }
+
+        .detail-sidebar {
+            position: static;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="detail-container">
+    <!-- Hero Image -->
+    <div class="detail-hero" style="background-image: url('{{ opportunity.image_url or 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=1200&q=80' }}');">
+        <div class="detail-hero-content">
+            <h1>{{ opportunity.title }}</h1>
+            <div class="org">{{ opportunity.organization.name if opportunity.organization else 'Independent Organization' }}</div>
+        </div>
+    </div>
+
+    <div class="detail-grid">
+        <!-- Main Content -->
+        <div class="detail-main">
+            <!-- Description -->
+            <div class="section">
+                <h2>About This Opportunity</h2>
+                <p>{{ opportunity.description }}</p>
+            </div>
+
+            <!-- Requirements -->
+            {% if opportunity.requirements %}
+            <div class="section">
+                <h2>Requirements</h2>
+                <p>{{ opportunity.requirements }}</p>
+            </div>
+            {% endif %}
+
+            <!-- What to Bring -->
+            {% if opportunity.what_to_bring %}
+            <div class="section">
+                <h2>What to Bring</h2>
+                <p>{{ opportunity.what_to_bring }}</p>
+            </div>
+            {% endif %}
+
+            <!-- Category -->
+            <div class="section">
+                <h2>Category</h2>
+                <span class="badge-large">{{ opportunity.category or 'General Volunteering' }}</span>
+                {% if opportunity.is_urgent %}
+                <span class="badge-large" style="background: #dc3545; color: white;">🔥 Urgent</span>
+                {% endif %}
+                {% if opportunity.is_recurring %}
+                <span class="badge-large">🔄 Recurring</span>
+                {% endif %}
+            </div>
+
+            <!-- Organization Info -->
+            {% if opportunity.organization %}
+            <div class="section">
+                <h2>About the Organization</h2>
+                <h3 style="font-size: 20px; margin-bottom: 8px;">{{ opportunity.organization.name }}</h3>
+                <p>{{ opportunity.organization.description }}</p>
+                {% if opportunity.organization.website %}
+                <p><a href="{{ opportunity.organization.website }}" target="_blank" style="color: #0f4c5c;">Visit Website →</a></p>
+                {% endif %}
+            </div>
+            {% endif %}
+        </div>
+
+        <!-- Sidebar -->
+        <div class="detail-sidebar">
+            <!-- Quick Info -->
+            <div class="info-card">
+                <h3>Quick Info</h3>
+                <div class="info-item">
+                    <span class="icon">📅</span>
+                    <div>
+                        <div class="label">Date</div>
+                        <div class="value">{{ opportunity.formatted_date }}</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="icon">⏰</span>
+                    <div>
+                        <div class="label">Time Slots</div>
+                        <div class="value">
+                            {% if opportunity.time_slots %}
+                                {{ opportunity.time_slots|length }} slots available
+                            {% else %}
+                                {{ opportunity.time }}
+                            {% endif %}
+                        </div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="icon">⏱️</span>
+                    <div>
+                        <div class="label">Duration</div>
+                        <div class="value">{{ opportunity.hours }} hour{% if opportunity.hours != 1 %}s{% endif %} per slot</div>
+                    </div>
+                </div>
+                <div class="info-item">
+                    <span class="icon">📍</span>
+                    <div>
+                        <div class="label">Location</div>
+                        <div class="value">{{ opportunity.address or 'Location TBD' }}</div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Booking CTA -->
+            <div class="book-cta">
+                <h3>Availability</h3>
+                <div class="spots">{{ opportunity.spots_remaining }}</div>
+                <div class="spots-label">spots available</div>
+                
+                {% if opportunity.is_full %}
+                    <button class="btn" disabled style="opacity: 0.6; cursor: not-allowed;">Fully Booked</button>
+                {% elif current_user.is_authenticated %}
+                    <a href="{{ url_for('booking_page', opportunity_id=opportunity.id) }}" class="btn" style="display: block; text-decoration: none;">Book Your Spot</a>
+                {% else %}
+                    <a href="{{ url_for('login', next=url_for('booking_page', opportunity_id=opportunity.id)) }}" class="btn" style="display: block; text-decoration: none;">Login to Book</a>
+                {% endif %}
+            </div>
+
+            <!-- Share -->
+            <div class="info-card" style="text-align: center;">
+                <h3>Share This Opportunity</h3>
+                <div style="display: flex; gap: 10px; justify-content: center;">
+                    <button onclick="shareOnFacebook()" style="padding: 10px 20px; background: #1877f2; color: white; border: none; border-radius: 6px; cursor: pointer;">Facebook</button>
+                    <button onclick="shareOnTwitter()" style="padding: 10px 20px; background: #1da1f2; color: white; border: none; border-radius: 6px; cursor: pointer;">Twitter</button>
+                    <button onclick="copyLink()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer;">Copy Link</button>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    function shareOnFacebook() {
+        const url = window.location.href;
+        window.open(`https://www.facebook.com/sharer/sharer.php?u=${encodeURIComponent(url)}`, '_blank');
+    }
+
+    function shareOnTwitter() {
+        const url = window.location.href;
+        const text = '{{ opportunity.title }} - Join me in volunteering!';
+        window.open(`https://twitter.com/intent/tweet?url=${encodeURIComponent(url)}&text=${encodeURIComponent(text)}`, '_blank');
+    }
+
+    function copyLink() {
+        navigator.clipboard.writeText(window.location.href);
+        alert('Link copied to clipboard!');
+    }
+</script>
+{% endblock %}

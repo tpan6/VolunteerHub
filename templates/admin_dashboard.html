@@ -1,0 +1,278 @@
+{% extends "base.html" %}
+
+{% block title %}Admin Dashboard - VolunteerHub{% endblock %}
+
+{% block extra_css %}
+<style>
+    /* Hide main site navigation */
+    #navbar {
+        display: none;
+    }
+
+    .admin-container {
+        max-width: 1600px;
+        margin: 100px auto 60px;
+        padding: 0 60px;
+    }
+
+    .admin-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 40px;
+        padding-bottom: 20px;
+        border-bottom: 2px solid #e9ecef;
+    }
+
+    .admin-header h1 {
+        color: #0f4c5c;
+        font-size: 36px;
+        display: flex;
+        align-items: center;
+        gap: 15px;
+    }
+
+    .admin-nav {
+        display: flex;
+        gap: 20px;
+        margin-bottom: 40px;
+    }
+
+    .admin-nav a {
+        padding: 12px 24px;
+        background: white;
+        color: #0f4c5c;
+        text-decoration: none;
+        border-radius: 8px;
+        font-weight: 600;
+        transition: all 0.3s ease;
+        box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
+    }
+
+    .admin-nav a:hover {
+        background: #0f4c5c;
+        color: white;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(0, 0, 0, 0.12);
+    }
+
+    .admin-nav a.active {
+        background: linear-gradient(135deg, #0f4c5c 0%, #1a7a8a 100%);
+        color: white;
+    }
+
+    .stats-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        gap: 25px;
+        margin-bottom: 40px;
+    }
+
+    .stat-card {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        transition: all 0.3s ease;
+    }
+
+    .stat-card:hover {
+        transform: translateY(-5px);
+        box-shadow: 0 8px 30px rgba(0, 0, 0, 0.12);
+    }
+
+    .stat-card .icon {
+        font-size: 40px;
+        margin-bottom: 15px;
+    }
+
+    .stat-card .number {
+        font-size: 42px;
+        font-weight: 700;
+        color: #0f4c5c;
+        margin-bottom: 8px;
+    }
+
+    .stat-card .label {
+        color: #6c757d;
+        font-size: 14px;
+        text-transform: uppercase;
+        letter-spacing: 0.5px;
+        margin-bottom: 15px;
+    }
+
+    .stat-card .sublabel {
+        font-size: 13px;
+        color: #28a745;
+        font-weight: 600;
+    }
+
+    .content-section {
+        background: white;
+        border-radius: 12px;
+        padding: 30px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 30px;
+    }
+
+    .section-title {
+        font-size: 24px;
+        font-weight: 600;
+        color: #0f4c5c;
+        margin-bottom: 25px;
+        display: flex;
+        align-items: center;
+        gap: 10px;
+    }
+
+    .activity-item {
+        padding: 15px;
+        border-left: 3px solid #5fb3c5;
+        background: #f8f9fa;
+        border-radius: 6px;
+        margin-bottom: 15px;
+    }
+
+    .activity-item .time {
+        font-size: 12px;
+        color: #6c757d;
+        margin-bottom: 5px;
+    }
+
+    .activity-item .description {
+        color: #2c3e50;
+        font-weight: 500;
+    }
+
+    .quick-actions {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 20px;
+    }
+
+    .action-card {
+        padding: 25px;
+        background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);
+        border-radius: 10px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        text-decoration: none;
+        color: #0f4c5c;
+    }
+
+    .action-card:hover {
+        transform: translateY(-3px);
+        box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+        background: linear-gradient(135deg, #0f4c5c 0%, #1a7a8a 100%);
+        color: white;
+    }
+
+    .action-card .icon {
+        font-size: 36px;
+        margin-bottom: 12px;
+    }
+
+    .action-card .title {
+        font-weight: 600;
+        font-size: 16px;
+    }
+
+    .logout-btn {
+        padding: 10px 20px;
+        background: #dc3545;
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        text-decoration: none;
+        transition: all 0.3s ease;
+    }
+
+    .logout-btn:hover {
+        background: #c82333;
+        transform: translateY(-2px);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="admin-container">
+    <div class="admin-header">
+        <h1>🔐 Admin Dashboard</h1>
+        <a href="{{ url_for('logout') }}" class="logout-btn">Logout</a>
+    </div>
+
+    <!-- Navigation -->
+    <div class="admin-nav">
+        <a href="{{ url_for('admin_dashboard') }}" class="active">Dashboard</a>
+        <a href="{{ url_for('admin_users') }}">Users</a>
+        <a href="{{ url_for('admin_organizations') }}">Organizations</a>
+        <a href="{{ url_for('admin_opportunities') }}">Opportunities</a>
+        <a href="{{ url_for('admin_bookings') }}">Bookings</a>
+    </div>
+
+    <!-- Stats Cards -->
+    <div class="stats-grid">
+        <div class="stat-card">
+            <div class="icon">👥</div>
+            <div class="number">{{ stats.total_users }}</div>
+            <div class="label">Total Users</div>
+            <div class="sublabel">{{ stats.volunteers }} Volunteers • {{ stats.organizations }} Orgs</div>
+        </div>
+        <div class="stat-card">
+            <div class="icon">📋</div>
+            <div class="number">{{ stats.total_opportunities }}</div>
+            <div class="label">Opportunities</div>
+            <div class="sublabel">{{ stats.active_opportunities }} Active</div>
+        </div>
+        <div class="stat-card">
+            <div class="icon">📅</div>
+            <div class="number">{{ stats.total_bookings }}</div>
+            <div class="label">Total Bookings</div>
+            <div class="sublabel">{{ stats.confirmed_bookings }} Confirmed</div>
+        </div>
+        <div class="stat-card">
+            <div class="icon">⏱️</div>
+            <div class="number">{{ "{:,.0f}".format(stats.total_hours) }}</div>
+            <div class="label">Volunteer Hours</div>
+            <div class="sublabel">{{ "{:,.0f}".format(stats.hours_this_month) }} This Month</div>
+        </div>
+    </div>
+
+    <!-- Quick Actions -->
+    <div class="content-section">
+        <div class="section-title">⚡ Quick Actions</div>
+        <div class="quick-actions">
+            <a href="{{ url_for('admin_users', action='create') }}" class="action-card">
+                <div class="icon">👤</div>
+                <div class="title">Create User</div>
+            </a>
+            <a href="{{ url_for('admin_organizations', action='create') }}" class="action-card">
+                <div class="icon">🏢</div>
+                <div class="title">Add Organization</div>
+            </a>
+            <a href="{{ url_for('admin_users') }}" class="action-card">
+                <div class="icon">📊</div>
+                <div class="title">View All Users</div>
+            </a>
+            <a href="{{ url_for('admin_bookings') }}" class="action-card">
+                <div class="icon">📆</div>
+                <div class="title">Manage Bookings</div>
+            </a>
+        </div>
+    </div>
+
+    <!-- Recent Activity -->
+    <div class="content-section">
+        <div class="section-title">📰 Recent Activity</div>
+        {% for activity in recent_activity %}
+        <div class="activity-item">
+            <div class="time">{{ activity.time }}</div>
+            <div class="description">{{ activity.description }}</div>
+        </div>
+        {% endfor %}
+    </div>
+</div>
+{% endblock %}

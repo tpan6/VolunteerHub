@@ -1,0 +1,572 @@
+{% extends "base.html" %}
+
+{% block title %}Book {{ opportunity.title }} - VolunteerHub{% endblock %}
+
+{% block extra_css %}
+<style>
+    .booking-container {
+        max-width: 900px;
+        margin: 120px auto 60px;
+        padding: 0 40px;
+    }
+
+    .booking-header {
+        text-align: center;
+        margin-bottom: 50px;
+    }
+
+    .booking-header h1 {
+        color: #0f4c5c;
+        font-size: 36px;
+        margin-bottom: 12px;
+    }
+
+    .booking-header .subtitle {
+        color: #6c757d;
+        font-size: 18px;
+    }
+
+    .booking-card {
+        background: white;
+        padding: 40px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        margin-bottom: 30px;
+    }
+
+    .opp-summary {
+        display: flex;
+        gap: 20px;
+        align-items: start;
+        padding-bottom: 30px;
+        border-bottom: 2px solid #f8f9fa;
+        margin-bottom: 30px;
+    }
+
+    .opp-summary-image {
+        width: 120px;
+        height: 120px;
+        background-size: cover;
+        background-position: center;
+        border-radius: 8px;
+        flex-shrink: 0;
+    }
+
+    .opp-summary-content h2 {
+        color: #0f4c5c;
+        font-size: 24px;
+        margin-bottom: 8px;
+    }
+
+    .opp-summary-content .org {
+        color: #6c757d;
+        margin-bottom: 12px;
+    }
+
+    .opp-summary-content .detail {
+        display: inline-block;
+        background: #f8f9fa;
+        padding: 6px 12px;
+        border-radius: 5px;
+        margin-right: 8px;
+        font-size: 13px;
+        margin-bottom: 8px;
+    }
+
+    .booking-section {
+        margin-bottom: 35px;
+    }
+
+    .booking-section h3 {
+        color: #2c3e50;
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    /* OpenTable-style Time Selector */
+    .calendar-container {
+        margin-bottom: 30px;
+    }
+
+    .calendar-header {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+        margin-bottom: 20px;
+    }
+
+    .calendar-header .month {
+        font-size: 20px;
+        font-weight: 600;
+        color: #0f4c5c;
+    }
+
+    .calendar-nav {
+        display: flex;
+        gap: 10px;
+    }
+
+    .calendar-nav button {
+        background: white;
+        border: 2px solid #dee2e6;
+        padding: 8px 16px;
+        border-radius: 6px;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .calendar-nav button:hover {
+        border-color: #0f4c5c;
+        color: #0f4c5c;
+    }
+
+    .date-selector {
+        display: grid;
+        grid-template-columns: repeat(7, 1fr);
+        gap: 10px;
+        margin-bottom: 30px;
+    }
+
+    .date-option {
+        background: white;
+        border: 2px solid #dee2e6;
+        padding: 15px 10px;
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .date-option:hover:not(.disabled) {
+        border-color: #5fb3c5;
+        transform: translateY(-2px);
+    }
+
+    .date-option.selected {
+        background: #0f4c5c;
+        border-color: #0f4c5c;
+        color: white;
+    }
+
+    .date-option.disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+
+    .date-option .day {
+        font-size: 12px;
+        opacity: 0.8;
+        margin-bottom: 5px;
+    }
+
+    .date-option .date {
+        font-size: 20px;
+        font-weight: 600;
+    }
+
+    .time-selector {
+        display: grid;
+        grid-template-columns: repeat(auto-fill, minmax(120px, 1fr));
+        gap: 12px;
+    }
+
+    .time-option {
+        background: white;
+        border: 2px solid #dee2e6;
+        padding: 14px;
+        border-radius: 8px;
+        text-align: center;
+        cursor: pointer;
+        font-weight: 600;
+        transition: all 0.3s ease;
+    }
+
+    .time-option .time-label {
+        font-size: 16px;
+        margin-bottom: 6px;
+    }
+
+    .time-option .spots-remaining {
+        font-size: 12px;
+        font-weight: 500;
+    }
+
+    .time-option:hover:not(.booked):not(.disabled) {
+        border-color: #5fb3c5;
+        background: #f0f8ff;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(95, 179, 197, 0.2);
+    }
+
+    .time-option.selected {
+        background: #0f4c5c;
+        border-color: #0f4c5c;
+        color: white;
+    }
+
+    .time-option.selected:hover {
+        background: #1a6d7e;
+        border-color: #1a6d7e;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(15, 76, 92, 0.4);
+        color: #2c3e50;
+    }
+
+    .time-option.selected .time-label,
+    .time-option.selected .spots-remaining,
+    .time-option.selected .spots-remaining span {
+        color: white !important;
+    }
+
+    .time-option.selected:hover .time-label,
+    .time-option.selected:hover .spots-remaining,
+    .time-option.selected:hover .spots-remaining span {
+        color: #2c3e50 !important;
+    }
+
+    .time-option.booked {
+        background: #f8f9fa;
+        border-color: #dee2e6;
+        color: #999;
+        cursor: not-allowed;
+    }
+
+    .time-option.disabled {
+        opacity: 0.3;
+        cursor: not-allowed;
+    }
+
+    .form-group {
+        margin-bottom: 20px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .form-group input,
+    .form-group textarea {
+        width: 100%;
+        padding: 12px;
+        border: 2px solid #dee2e6;
+        border-radius: 6px;
+        font-size: 15px;
+    }
+
+    .form-group textarea {
+        resize: vertical;
+        min-height: 100px;
+    }
+
+    .booking-summary {
+        background: #f8f9fa;
+        padding: 25px;
+        border-radius: 8px;
+        margin-bottom: 25px;
+    }
+
+    .booking-summary h4 {
+        color: #0f4c5c;
+        margin-bottom: 15px;
+    }
+
+    .summary-item {
+        display: flex;
+        justify-content: space-between;
+        margin-bottom: 10px;
+        font-size: 15px;
+    }
+
+    .summary-item .label {
+        color: #6c757d;
+    }
+
+    .summary-item .value {
+        font-weight: 600;
+        color: #2c3e50;
+    }
+
+    .submit-btn {
+        width: 100%;
+        padding: 18px;
+        background: linear-gradient(135deg, #5fb3c5 0%, #0f4c5c 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 18px;
+        font-weight: 700;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+
+    .submit-btn:hover:not(:disabled) {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(15, 76, 92, 0.3);
+    }
+
+    .submit-btn:disabled {
+        opacity: 0.6;
+        cursor: not-allowed;
+    }
+
+    @media (max-width: 768px) {
+        .date-selector {
+            grid-template-columns: repeat(4, 1fr);
+        }
+
+        .time-selector {
+            grid-template-columns: repeat(2, 1fr);
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="booking-container">
+    <div class="booking-header">
+        <h1>📅 Book Your Volunteer Spot</h1>
+        <p class="subtitle">Select your preferred date and time</p>
+    </div>
+
+    <div class="booking-card">
+        <!-- Opportunity Summary -->
+        <div class="opp-summary">
+            <div class="opp-summary-image" style="background-image: url('{{ opportunity.image_url or 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=200&q=80' }}');"></div>
+            <div class="opp-summary-content">
+                <h2>{{ opportunity.title }}</h2>
+                <div class="org">{{ opportunity.organization.name if opportunity.organization else 'Independent' }}</div>
+                <div>
+                    <span class="detail">📍 {{ opportunity.address or 'Location TBD' }}</span>
+                    <span class="detail">⏱️ {{ opportunity.hours }} hours</span>
+                    <span class="detail">{{ opportunity.category }}</span>
+                </div>
+            </div>
+        </div>
+
+        <form id="bookingForm">
+            <!-- Date Display (Not selectable - fixed date) -->
+            <div class="booking-section">
+                <h3>1. Date</h3>
+                <div style="background: #f8f9fa; padding: 15px; border-radius: 8px; text-align: center; font-size: 18px; font-weight: 600; color: #0f4c5c;">
+                    📅 {{ opportunity.date.strftime('%A, %B %d, %Y') }}
+                </div>
+            </div>
+
+            <!-- Time Selection - OpenTable Style with Multi-Select -->
+            <div class="booking-section">
+                <h3>2. Select Time Slots</h3>
+                <p style="color: #6c757d; font-size: 14px; margin-bottom: 15px;">
+                    💡 You can select multiple time slots to volunteer for multiple hours!
+                </p>
+                <div class="time-selector" id="timeSelector">
+                    {% if time_slots %}
+                        {% for slot in time_slots %}
+                            <div class="time-option {% if slot.is_full %}booked{% endif %}" 
+                                 data-slot-id="{{ slot.id }}" 
+                                 data-time="{{ slot.start_time }}"
+                                 data-spots="{{ slot.spots_remaining }}"
+                                 {% if not slot.is_full %}onclick="toggleTimeSlot(this)"{% endif %}>
+                                <div class="time-label">{{ slot.start_time }}</div>
+                                <div class="spots-remaining">
+                                    {% if slot.is_full %}
+                                        <span style="color: #dc3545;">Full</span>
+                                    {% else %}
+                                        <span style="color: #28a745;">Available</span>
+                                    {% endif %}
+                                </div>
+                            </div>
+                        {% endfor %}
+                    {% else %}
+                        <p style="color: #6c757d; text-align: center; grid-column: 1 / -1;">
+                            No time slots available for this opportunity.
+                        </p>
+                    {% endif %}
+                </div>
+            </div>
+
+            <!-- Additional Information -->
+            <div class="booking-section">
+                <h3>3. Additional Information (Optional)</h3>
+                
+                <div class="form-group">
+                    <label for="emergencyContact">Emergency Contact Name</label>
+                    <input type="text" id="emergencyContact" name="emergency_contact" placeholder="John Doe">
+                </div>
+
+                <div class="form-group">
+                    <label for="emergencyPhone">Emergency Contact Phone</label>
+                    <input type="tel" id="emergencyPhone" name="emergency_phone" placeholder="(555) 123-4567">
+                </div>
+
+                <div class="form-group">
+                    <label for="notes">Special Notes or Requests</label>
+                    <textarea id="notes" name="notes" placeholder="Any dietary restrictions, accessibility needs, or other information we should know..."></textarea>
+                </div>
+            </div>
+
+            <!-- Booking Summary -->
+            <div class="booking-summary">
+                <h4>Booking Summary</h4>
+                <div class="summary-item">
+                    <span class="label">Opportunity:</span>
+                    <span class="value">{{ opportunity.title }}</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Date:</span>
+                    <span class="value" id="summaryDate">Not selected</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Time Slots:</span>
+                    <span class="value" id="summaryTime">Not selected</span>
+                </div>
+                <div class="summary-item">
+                    <span class="label">Total Duration:</span>
+                    <span class="value" id="summaryHours">0 hours</span>
+                </div>
+            </div>
+
+            <!-- Submit Button -->
+            <button type="submit" class="submit-btn" id="submitBtn" disabled>
+                Confirm Booking
+            </button>
+        </form>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    let selectedDate = null;
+    let selectedSlots = []; // Array to store multiple selected slots
+    const opportunityId = {{ opportunity.id }};
+
+    // Auto-select the date when page loads (since opportunity has a fixed date)
+    document.addEventListener('DOMContentLoaded', function() {
+        const oppDate = '{{ opportunity.date }}';
+        selectedDate = oppDate;
+        document.getElementById('summaryDate').textContent = new Date(oppDate).toLocaleDateString('en-US', { 
+            weekday: 'long', 
+            year: 'numeric', 
+            month: 'long', 
+            day: 'numeric' 
+        });
+    });
+
+    function toggleTimeSlot(element) {
+        const slotId = element.dataset.slotId;
+        const slotTime = element.dataset.time;
+        
+        // Check if already selected
+        const index = selectedSlots.findIndex(s => s.id === slotId);
+        
+        if (index > -1) {
+            // Deselect
+            selectedSlots.splice(index, 1);
+            element.classList.remove('selected');
+        } else {
+            // Select
+            selectedSlots.push({ id: slotId, time: slotTime });
+            element.classList.add('selected');
+        }
+        
+        // Update summary
+        updateSummary();
+        
+        // Enable/disable submit button
+        checkFormComplete();
+    }
+
+    function updateSummary() {
+        const summaryTime = document.getElementById('summaryTime');
+        const summaryHours = document.getElementById('summaryHours');
+        
+        if (selectedSlots.length === 0) {
+            summaryTime.textContent = 'Not selected';
+            summaryHours.textContent = '0 hours';
+        } else if (selectedSlots.length === 1) {
+            summaryTime.textContent = selectedSlots[0].time;
+            summaryHours.textContent = '{{ opportunity.hours }} hours';
+        } else {
+            // Show all selected times
+            const times = selectedSlots.map(s => s.time).join(', ');
+            summaryTime.textContent = times;
+            summaryHours.textContent = (selectedSlots.length * {{ opportunity.hours }}) + ' hours';
+        }
+    }
+
+    function checkFormComplete() {
+        const submitBtn = document.getElementById('submitBtn');
+        if (selectedDate && selectedSlots.length > 0) {
+            submitBtn.disabled = false;
+            submitBtn.textContent = selectedSlots.length === 1 ? 
+                'Confirm Booking' : 
+                `Book ${selectedSlots.length} Time Slots`;
+        } else {
+            submitBtn.disabled = true;
+            submitBtn.textContent = 'Confirm Booking';
+        }
+    }
+
+    // Handle form submission
+    document.getElementById('bookingForm').addEventListener('submit', async function(e) {
+        e.preventDefault();
+        
+        if (selectedSlots.length === 0) {
+            customError('Please select at least one time slot before booking.', 'Selection Required');
+            return;
+        }
+
+        const submitBtn = document.getElementById('submitBtn');
+        submitBtn.disabled = true;
+        submitBtn.textContent = 'Processing...';
+
+        try {
+            // Book each selected time slot
+            const bookingPromises = selectedSlots.map(slot => {
+                const bookingData = {
+                    time_slot_id: parseInt(slot.id),
+                    notes: document.getElementById('notes').value,
+                    emergency_contact: document.getElementById('emergencyContact').value,
+                    emergency_phone: document.getElementById('emergencyPhone').value
+                };
+
+                return fetch('/book', {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(bookingData)
+                });
+            });
+
+            const responses = await Promise.all(bookingPromises);
+            const results = await Promise.all(responses.map(r => r.json()));
+
+            // Check if all bookings succeeded
+            const allSuccessful = results.every(r => r.success);
+            
+            if (allSuccessful) {
+                const message = selectedSlots.length === 1 
+                    ? results[0].message 
+                    : `Successfully booked ${selectedSlots.length} time slots!`;
+                await customSuccess(message, 'Booking Confirmed!');
+                window.location.href = '/dashboard';
+            } else {
+                const failedCount = results.filter(r => !r.success).length;
+                await customError(`${failedCount} booking(s) failed. Please try again.`, 'Booking Failed');
+                submitBtn.disabled = false;
+                submitBtn.textContent = 'Confirm Booking';
+            }
+        } catch (error) {
+            console.error('Error:', error);
+            await customError('An error occurred while processing your booking. Please try again.', 'Connection Error');
+            submitBtn.disabled = false;
+            submitBtn.textContent = 'Confirm Booking';
+        }
+    });
+</script>
+{% endblock %}

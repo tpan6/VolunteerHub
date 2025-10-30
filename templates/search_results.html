@@ -1,0 +1,333 @@
+{% extends "base.html" %}
+
+{% block title %}Search Results - VolunteerHub{% endblock %}
+
+{% block extra_css %}
+<style>
+    .search-container {
+        max-width: 1400px;
+        margin: 120px auto 60px;
+        padding: 0 60px;
+        display: grid;
+        grid-template-columns: 300px 1fr;
+        gap: 40px;
+    }
+
+    .filters-sidebar {
+        background: white;
+        padding: 30px;
+        border-radius: 12px;
+        box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);
+        height: fit-content;
+        position: sticky;
+        top: 100px;
+    }
+
+    .filters-sidebar h3 {
+        color: #0f4c5c;
+        font-size: 20px;
+        margin-bottom: 20px;
+    }
+
+    .filter-group {
+        margin-bottom: 20px;
+    }
+
+    .filter-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        font-size: 14px;
+        color: #2c3e50;
+    }
+
+    .filter-group select,
+    .filter-group input {
+        width: 100%;
+        padding: 10px;
+        border: 2px solid #dee2e6;
+        border-radius: 6px;
+        font-size: 14px;
+    }
+
+    .filter-btn {
+        width: 100%;
+        padding: 12px;
+        background: linear-gradient(135deg, #0f4c5c 0%, #1a7a8a 100%);
+        color: white;
+        border: none;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        margin-bottom: 10px;
+        position: relative;
+        overflow: hidden;
+        box-shadow: 0 2px 8px rgba(15, 76, 92, 0.3);
+    }
+
+    .filter-btn::before {
+        content: '';
+        position: absolute;
+        top: 50%;
+        left: 50%;
+        width: 0;
+        height: 0;
+        border-radius: 50%;
+        background: rgba(255, 255, 255, 0.2);
+        transform: translate(-50%, -50%);
+        transition: width 0.6s, height 0.6s;
+    }
+
+    .filter-btn:hover::before {
+        width: 300px;
+        height: 300px;
+    }
+
+    .filter-btn:hover {
+        background: linear-gradient(135deg, #0d3d4a 0%, #156570 100%);
+        transform: translateY(-2px);
+        box-shadow: 0 4px 12px rgba(15, 76, 92, 0.4);
+    }
+
+    .filter-btn:active {
+        transform: translateY(0);
+        box-shadow: 0 2px 6px rgba(15, 76, 92, 0.3);
+    }
+
+    .clear-btn {
+        width: 100%;
+        padding: 10px;
+        background: white;
+        color: #0f4c5c;
+        border: 2px solid #0f4c5c;
+        border-radius: 6px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        position: relative;
+        overflow: hidden;
+    }
+
+    .clear-btn::before {
+        content: '';
+        position: absolute;
+        top: 0;
+        left: -100%;
+        width: 100%;
+        height: 100%;
+        background: linear-gradient(90deg, transparent, rgba(15, 76, 92, 0.1), transparent);
+        transition: left 0.5s;
+    }
+
+    .clear-btn:hover::before {
+        left: 100%;
+    }
+
+    .clear-btn:hover {
+        background: #f8f9fa;
+        border-color: #0d3d4a;
+        color: #0d3d4a;
+        transform: translateY(-2px);
+        box-shadow: 0 4px 8px rgba(15, 76, 92, 0.15);
+    }
+
+    .clear-btn:active {
+        transform: translateY(0);
+    }
+
+    .results-section {
+        min-width: 0;
+    }
+
+    @media (max-width: 1024px) {
+        .search-container {
+            grid-template-columns: 1fr;
+        }
+
+        .filters-sidebar {
+            position: static;
+        }
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="search-container">
+    <!-- Filters Sidebar -->
+    <div class="filters-sidebar">
+        <h3>🔍 Filters</h3>
+        
+        <div class="filter-group">
+            <label for="categoryFilter">Category</label>
+            <select id="categoryFilter">
+                <option value="">All Categories</option>
+                <option value="Environment">🌳 Environment</option>
+                <option value="Education">📚 Education</option>
+                <option value="Food Security">🍲 Food Security</option>
+                <option value="Animal Welfare">🐕 Animal Welfare</option>
+                <option value="Technology">👨‍🏫 Technology</option>
+                <option value="Healthcare">🏥 Healthcare</option>
+            </select>
+        </div>
+
+        <div class="filter-group">
+            <label for="dateFilter">Date</label>
+            <input type="date" id="dateFilter">
+        </div>
+
+        <div class="filter-group">
+            <label for="slotsFilter">Time Slots Available</label>
+            <select id="slotsFilter">
+                <option value="">Any Amount</option>
+                <option value="1">1 slot</option>
+                <option value="2">2 slots</option>
+                <option value="3">3 slots</option>
+                <option value="4+">4+ slots</option>
+            </select>
+        </div>
+
+        <button class="filter-btn" onclick="applyFilters()">Apply Filters</button>
+        <button class="clear-btn" onclick="clearFilters()">Clear All</button>
+    </div>
+
+    <!-- Results Section -->
+    <div class="results-section">
+        <div style="margin-bottom: 40px;">
+            <h1 style="color: #0f4c5c; font-size: 36px; margin-bottom: 12px;">
+                Search Results
+            </h1>
+            <p style="color: #6c757d; font-size: 18px;">
+                {% if query %}
+                    Found <span id="resultCount">{{ opportunities|length }}</span> opportunities for "{{ query }}"
+                {% else %}
+                    Showing <span id="resultCount">{{ opportunities|length }}</span> opportunities
+                {% endif %}
+            </p>
+        </div>
+
+        <!-- Search Bar -->
+        <div style="margin-bottom: 40px;">
+            <form action="{{ url_for('search') }}" method="GET">
+                <div style="position: relative;">
+                    <input type="text" 
+                           id="searchInput"
+                           name="q" 
+                           value="{{ query }}"
+                           placeholder="Search for opportunities..."
+                           style="width: 100%; padding: 18px 120px 18px 24px; border: 2px solid #dee2e6; border-radius: 8px; font-size: 16px;">
+                    <button type="submit" style="position: absolute; right: 8px; top: 50%; transform: translateY(-50%); background: #0f4c5c; color: white; border: none; padding: 12px 28px; border-radius: 6px; font-weight: 600; cursor: pointer;">
+                        Search
+                    </button>
+                </div>
+            </form>
+        </div>
+
+        <!-- Results -->
+        <div id="resultsContainer">
+            {% if opportunities %}
+            <div class="opp-grid">
+                {% for opp in opportunities %}
+                <div class="opp-card" data-category="{{ opp.category }}" data-date="{{ opp.formatted_date }}" data-slots="{{ opp.time_slots|length }}">
+                    <div class="opp-image" style="background-image: url('{{ opp.image_url or 'https://images.unsplash.com/photo-1559027615-cd4628902d4a?w=500&q=80' }}');">
+                        <div class="opp-badge">{{ opp.category or '🤝 Community' }}</div>
+                    </div>
+                    <div class="opp-content">
+                        <div class="opp-title">{{ opp.title }}</div>
+                        <div class="opp-org">{{ opp.organization.name if opp.organization else 'Independent' }}</div>
+                        <div class="opp-details">
+                            <span class="detail-badge">📅 {{ opp.formatted_date }}</span>
+                            <span class="detail-badge">⏰ {% if opp.time_slots %}{{ opp.time_slots|length }} slots{% else %}TBD{% endif %}</span>
+                            <span class="detail-badge">⏱️ {{ opp.hours }} hours</span>
+                        </div>
+                        <div class="opp-footer">
+                            <div class="spots-left">
+                                <span>{{ opp.spots_remaining }}</span> spots left
+                            </div>
+                            <a href="{{ url_for('opportunity_detail', id=opp.id) }}" class="book-btn">View Details</a>
+                        </div>
+                    </div>
+                </div>
+                {% endfor %}
+            </div>
+            {% else %}
+            <div style="text-align: center; padding: 80px 20px; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+                <div style="font-size: 64px; margin-bottom: 20px; opacity: 0.5;">🔍</div>
+                <h2 style="color: #2c3e50; margin-bottom: 12px;">No Results Found</h2>
+                <p style="color: #6c757d; margin-bottom: 30px;">Try adjusting your search terms or browse all opportunities</p>
+                <a href="{{ url_for('opportunities_map') }}" class="btn btn-primary">Browse All Opportunities</a>
+            </div>
+            {% endif %}
+        </div>
+    </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+    // Apply filters
+    function applyFilters() {
+        const category = document.getElementById('categoryFilter').value;
+        const date = document.getElementById('dateFilter').value;
+        const slots = document.getElementById('slotsFilter').value;
+        const searchTerm = document.getElementById('searchInput').value.toLowerCase();
+        
+        const cards = document.querySelectorAll('.opp-card');
+        let visibleCount = 0;
+        
+        cards.forEach(card => {
+            let show = true;
+            const cardCategory = card.getAttribute('data-category');
+            const cardDate = card.getAttribute('data-date');
+            const cardSlots = parseInt(card.getAttribute('data-slots'));
+            const cardText = card.textContent.toLowerCase();
+            
+            // Check search term
+            if (searchTerm && !cardText.includes(searchTerm)) show = false;
+            
+            // Check category filter
+            if (category && cardCategory !== category) show = false;
+            
+            // Check date filter
+            if (date) {
+                const filterDate = new Date(date);
+                const formattedFilterDate = filterDate.toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+                if (!cardDate.includes(formattedFilterDate)) show = false;
+            }
+            
+            // Check time slots filter
+            if (slots) {
+                if (slots === '1' && cardSlots !== 1) show = false;
+                if (slots === '2' && cardSlots !== 2) show = false;
+                if (slots === '3' && cardSlots !== 3) show = false;
+                if (slots === '4+' && cardSlots < 4) show = false;
+            }
+            
+            card.style.display = show ? 'block' : 'none';
+            if (show) visibleCount++;
+        });
+        
+        // Update result count
+        document.getElementById('resultCount').textContent = visibleCount;
+    }
+
+    // Clear filters
+    function clearFilters() {
+        document.getElementById('categoryFilter').value = '';
+        document.getElementById('dateFilter').value = '';
+        document.getElementById('slotsFilter').value = '';
+        
+        const cards = document.querySelectorAll('.opp-card');
+        cards.forEach(card => {
+            card.style.display = 'block';
+        });
+        
+        document.getElementById('resultCount').textContent = cards.length;
+    }
+
+    // Live search in current results
+    document.getElementById('searchInput').addEventListener('input', function(e) {
+        applyFilters();
+    });
+</script>
+{% endblock %}

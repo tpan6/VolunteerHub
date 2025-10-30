@@ -1,0 +1,167 @@
+{% extends "base.html" %}
+
+{% block title %}Organization Login - VolunteerHub{% endblock %}
+
+{% block extra_css %}
+<style>
+    .org-login-container {
+        min-height: 100vh;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        background: linear-gradient(135deg, #5fb3c5 0%, #0f4c5c 100%);
+        padding: 20px;
+    }
+
+    .org-login-box {
+        background: white;
+        padding: 50px;
+        border-radius: 16px;
+        box-shadow: 0 20px 60px rgba(0, 0, 0, 0.3);
+        max-width: 450px;
+        width: 100%;
+    }
+
+    .org-header {
+        text-align: center;
+        margin-bottom: 40px;
+    }
+
+    .org-header .icon {
+        font-size: 64px;
+        margin-bottom: 20px;
+    }
+
+    .org-header h1 {
+        color: #0f4c5c;
+        font-size: 32px;
+        margin-bottom: 8px;
+    }
+
+    .org-header p {
+        color: #6c757d;
+        font-size: 14px;
+    }
+
+    .form-group {
+        margin-bottom: 25px;
+    }
+
+    .form-group label {
+        display: block;
+        margin-bottom: 8px;
+        font-weight: 600;
+        color: #2c3e50;
+        font-size: 14px;
+    }
+
+    .form-group input {
+        width: 100%;
+        padding: 14px;
+        border: 2px solid #dee2e6;
+        border-radius: 8px;
+        font-size: 15px;
+        transition: all 0.3s ease;
+    }
+
+    .form-group input:focus {
+        outline: none;
+        border-color: #5fb3c5;
+        box-shadow: 0 0 0 3px rgba(95, 179, 197, 0.1);
+    }
+
+    .org-btn {
+        width: 100%;
+        padding: 16px;
+        background: linear-gradient(135deg, #5fb3c5 0%, #0f4c5c 100%);
+        color: white;
+        border: none;
+        border-radius: 8px;
+        font-size: 16px;
+        font-weight: 600;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        box-shadow: 0 4px 12px rgba(95, 179, 197, 0.3);
+    }
+
+    .org-btn:hover {
+        transform: translateY(-2px);
+        box-shadow: 0 6px 20px rgba(95, 179, 197, 0.4);
+    }
+
+    .org-btn:active {
+        transform: translateY(0);
+    }
+
+    .back-link {
+        text-align: center;
+        margin-top: 25px;
+    }
+
+    .back-link a {
+        color: #6c757d;
+        text-decoration: none;
+        font-size: 14px;
+        transition: color 0.3s ease;
+    }
+
+    .back-link a:hover {
+        color: #0f4c5c;
+    }
+
+    .alert {
+        padding: 14px;
+        border-radius: 8px;
+        margin-bottom: 20px;
+        font-size: 14px;
+    }
+
+    .alert-danger {
+        background: #f8d7da;
+        color: #721c24;
+        border: 1px solid #f5c6cb;
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<div class="org-login-container">
+    <div class="org-login-box">
+        <div class="org-header">
+            <div class="icon">🏢</div>
+            <h1>Organization Portal</h1>
+            <p>Manage your volunteer opportunities</p>
+        </div>
+
+        {% with messages = get_flashed_messages(with_categories=true) %}
+            {% if messages %}
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}">{{ message }}</div>
+                {% endfor %}
+            {% endif %}
+        {% endwith %}
+
+        <form method="POST">
+            <div class="form-group">
+                <label for="email">Email Address</label>
+                <input type="email" id="email" name="email" required placeholder="organization@example.com">
+            </div>
+
+            <div class="form-group">
+                <label for="password">Password</label>
+                <input type="password" id="password" name="password" required placeholder="Enter your password">
+            </div>
+
+            <button type="submit" class="org-btn">Sign In to Organization Portal</button>
+        </form>
+
+        <div class="back-link" style="margin-top: 1.5rem; text-align: center;">
+            Don't have an account? <a href="{{ url_for('organization_signup') }}" style="color: #5fb3c5; font-weight: 600;">Register your organization</a>
+        </div>
+
+        <div class="back-link">
+            <a href="{{ url_for('index') }}">← Back to Main Site</a>
+        </div>
+    </div>
+</div>
+{% endblock %}

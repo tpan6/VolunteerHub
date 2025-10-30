@@ -1,0 +1,118 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block title %}VolunteerHub - Connect & Make a Difference{% endblock %}</title>
+    
+    <!-- CSS -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+    
+    {% block extra_css %}{% endblock %}
+</head>
+<body>
+    <!-- Navigation -->
+    <nav id="navbar">
+        <a href="{{ url_for('index') }}" class="logo">
+            <div class="logo-icon">🤝</div>
+            <span>VolunteerHub</span>
+        </a>
+        <div class="nav-links">
+            <a href="{{ url_for('index') }}">Home</a>
+            <a href="{{ url_for('opportunities_map') }}">Browse</a>
+            <a href="{{ url_for('search') }}">Search</a>
+            {% if current_user.is_authenticated %}
+                <a href="{{ url_for('dashboard') }}">Dashboard</a>
+                <a href="{{ url_for('logout') }}">Logout</a>
+            {% else %}
+                <a href="{{ url_for('login') }}">Login</a>
+                <a href="{{ url_for('signup') }}" class="nav-donate">Sign Up</a>
+                <a href="{{ url_for('organization_signup') }}" style="background: linear-gradient(135deg, #5fb3c5, #0f4c5c); color: white; padding: 8px 16px; border-radius: 20px; font-weight: 600;">For Organizations</a>
+            {% endif %}
+        </div>
+    </nav>
+
+    <!-- Flash Messages -->
+    {% with messages = get_flashed_messages(with_categories=true) %}
+        {% if messages %}
+            <div class="flash-container" style="position: fixed; top: 80px; right: 20px; z-index: 9999;">
+                {% for category, message in messages %}
+                    <div class="alert alert-{{ category }}" style="background: {% if category == 'success' %}#28a745{% elif category == 'error' %}#dc3545{% else %}#17a2b8{% endif %}; color: white; padding: 15px 20px; border-radius: 6px; margin-bottom: 10px; box-shadow: 0 4px 12px rgba(0,0,0,0.15); animation: slideIn 0.3s ease;">
+                        {{ message }}
+                    </div>
+                {% endfor %}
+            </div>
+        {% endif %}
+    {% endwith %}
+
+    <!-- Main Content -->
+    {% block content %}{% endblock %}
+
+    <!-- Footer -->
+    <footer style="background: #0f4c5c; color: white; padding: 40px 60px;">
+        <div style="max-width: 1200px; margin: 0 auto;">
+            <div style="display: grid; grid-template-columns: repeat(3, 1fr); gap: 40px; margin-bottom: 30px;">
+                <div>
+                    <h4 style="margin-bottom: 15px; font-size: 18px;">For Volunteers</h4>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <a href="{{ url_for('opportunities_map') }}" style="color: rgba(255,255,255,0.8); text-decoration: none; font-size: 14px;">Browse Opportunities</a>
+                        <a href="{{ url_for('search') }}" style="color: rgba(255,255,255,0.8); text-decoration: none; font-size: 14px;">Search</a>
+                        <a href="{{ url_for('signup') }}" style="color: rgba(255,255,255,0.8); text-decoration: none; font-size: 14px;">Sign Up</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 15px; font-size: 18px;">For Organizations</h4>
+                    <div style="display: flex; flex-direction: column; gap: 8px;">
+                        <a href="{{ url_for('organization_signup') }}" style="color: rgba(255,255,255,0.8); text-decoration: none; font-size: 14px;">Register Organization</a>
+                        <a href="{{ url_for('organization_login') }}" style="color: rgba(255,255,255,0.8); text-decoration: none; font-size: 14px;">Organization Login</a>
+                    </div>
+                </div>
+                <div>
+                    <h4 style="margin-bottom: 15px; font-size: 18px;">About</h4>
+                    <p style="color: rgba(255,255,255,0.8); font-size: 14px; line-height: 1.6;">
+                        VolunteerHub connects volunteers with meaningful opportunities in their community.
+                    </p>
+                </div>
+            </div>
+            <div style="border-top: 1px solid rgba(255,255,255,0.2); padding-top: 20px; text-align: center;">
+                <p style="margin-bottom: 10px;">&copy; 2025 VolunteerHub. All rights reserved.</p>
+                <p style="font-size: 14px; color: rgba(255, 255, 255, 0.7);">Built for Congressional App Challenge</p>
+            </div>
+        </div>
+    </footer>
+
+    <!-- Custom Modal -->
+    <div class="modal-overlay" id="customModal">
+        <div class="modal">
+            <div class="modal-header">
+                <span class="icon" id="modalIcon">ℹ️</span>
+                <h3 id="modalTitle">Notification</h3>
+            </div>
+            <div class="modal-body" id="modalBody">
+                Message goes here
+            </div>
+            <div class="modal-footer" id="modalFooter">
+                <button class="modal-btn modal-btn-primary" onclick="closeModal()">OK</button>
+            </div>
+        </div>
+    </div>
+
+    <!-- JavaScript -->
+    <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    
+    {% block extra_js %}{% endblock %}
+
+    <style>
+        @keyframes slideIn {
+            from {
+                opacity: 0;
+                transform: translateX(100px);
+            }
+            to {
+                opacity: 1;
+                transform: translateX(0);
+            }
+        }
+    </style>
+</body>
+</html>

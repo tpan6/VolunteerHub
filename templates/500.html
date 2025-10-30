@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Server Error - VolunteerHub{% endblock %}
+
+{% block content %}
+<div style="min-height: 80vh; display: flex; align-items: center; justify-content: center; background: linear-gradient(135deg, #f8f9fa 0%, #e9ecef 100%);">
+    <div style="text-align: center; max-width: 600px; padding: 40px;">
+        <div style="font-size: 120px; margin-bottom: 20px;">😵</div>
+        <h1 style="font-size: 48px; color: #0f4c5c; margin-bottom: 20px;">500</h1>
+        <h2 style="font-size: 32px; color: #2c3e50; margin-bottom: 20px;">Internal Server Error</h2>
+        <p style="font-size: 18px; color: #6c757d; margin-bottom: 40px; line-height: 1.6;">
+            Something went wrong on our end. Don't worry, it's not you—it's us! 
+            Our team has been notified and we're working on fixing it.
+        </p>
+        <div style="display: flex; gap: 15px; justify-content: center; flex-wrap: wrap;">
+            <a href="{{ url_for('index') }}" class="btn btn-primary" style="padding: 14px 32px; font-size: 16px;">
+                Return Home
+            </a>
+            <button onclick="location.reload()" class="btn btn-secondary" style="padding: 14px 32px; font-size: 16px;">
+                Try Again
+            </button>
+        </div>
+        
+        <div style="margin-top: 60px; padding: 30px; background: white; border-radius: 12px; box-shadow: 0 4px 20px rgba(0, 0, 0, 0.08);">
+            <h3 style="color: #2c3e50; margin-bottom: 15px; font-size: 20px;">What can you do?</h3>
+            <ul style="text-align: left; color: #6c757d; line-height: 1.8;">
+                <li>Refresh the page and try again</li>
+                <li>Go back to the <a href="{{ url_for('index') }}" style="color: #0f4c5c;">homepage</a></li>
+                <li>Contact us at <a href="mailto:support@volunteerhub.org" style="color: #0f4c5c;">support@volunteerhub.org</a></li>
+            </ul>
+        </div>
+    </div>
+</div>
+{% endblock %}

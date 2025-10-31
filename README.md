@@ -8,7 +8,7 @@
 
 ## 📖 About
 
-VolunteerHub is a modern web platform that makes it easy for people to find, book, and track volunteer opportunities in their community. With an intuitive interface, interactive maps, and seamless booking system, we're making volunteering accessible to everyone.
+VolunteerHub is a modern web platform that makes it easy for people to find, book, and track volunteer opportunities in their community. With an intuitive interface, interactive maps, and seamless booking, VolunteerHub aims to lower the barrier to volunteering and increase community impact.
 
 ### ✨ Key Features
 
@@ -31,13 +31,13 @@ VolunteerHub is a modern web platform that makes it easy for people to find, boo
 
 ### Installation
 
-1. **Clone the repository**
+1. Clone the repository
 ```bash
-git clone https://github.com/yourusername/volunteer-hub.git
-cd volunteer-hub
+git clone https://github.com/tpan6/VolunteerHub.git
+cd VolunteerHub
 ```
 
-2. **Create a virtual environment**
+2. Create a virtual environment
 ```bash
 python -m venv venv
 
@@ -48,109 +48,103 @@ venv\Scripts\activate
 source venv/bin/activate
 ```
 
-3. **Install dependencies**
+3. Install dependencies
 ```bash
 pip install -r requirements.txt
 ```
 
-4. **Initialize the database**
+4. Initialize the database (see QUICKSTART.md for details)
 ```bash
 flask init-db
 ```
 
-5. **Run the application**
+5. Run the application
 ```bash
 python app.py
 ```
 
-6. **Open your browser**
+6. Open your browser
 Navigate to `http://localhost:5000`
 
 ## 📁 Project Structure
 
+The repository layout at the project root (updated to match the repository):
+
+````markdown
 ```
-volunteer-app/
-├── app.py                 # Main Flask application
-├── models.py              # Database models
-├── requirements.txt       # Python dependencies
-├── README.md             # This file
-│
-├── static/
-│   ├── css/
-│   │   └── style.css     # Main stylesheet
-│   ├── js/
-│   │   └── main.js       # JavaScript utilities
+.toplevel files and directories
+├── .env.example          # Example env vars for local development
+├── .gitignore
+├── DEPLOYMENT.md         # Deployment instructions and notes
+├── GOOGLE_MAPS_SETUP.md  # How to configure Google Maps API keys
+├── GOOGLE_OAUTH_SETUP.md # Google OAuth setup instructions
+├── LICENSE
+├── QUICKSTART.md         # Quickstart guide for developers
+├── README.md             # This file (updated)
+├── app.py                # Main Flask application entrypoint
+├── models.py             # Database models and schema definitions
+├── requirements.txt      # Python dependencies
+├── setup.bat             # Windows setup helper script
+├── setup.sh              # macOS/Linux setup helper script
+├── static/               # Static frontend assets
+│   ├── css/              # Project CSS files (e.g., style.css)
+│   ├── js/               # JavaScript files (e.g., main.js)
 │   └── images/           # Image assets (add your own)
-│
-└── templates/
-    ├── base.html         # Base template
-    ├── index.html        # Home page (Tobias)
-    ├── map.html          # Interactive map (Sreehass)
-    ├── booking.html      # Booking system (Thomas)
-    ├── login.html        # Login page (Eshaan)
-    ├── signup.html       # Registration page (Eshaan)
-    ├── dashboard.html    # User dashboard (Eshaan)
+└── templates/            # Jinja2 HTML templates used by Flask
+    ├── base.html
+    ├── index.html
+    ├── map.html
+    ├── booking.html
+    ├── login.html
+    ├── signup.html
+    ├── dashboard.html
     ├── opportunity_detail.html
     └── search_results.html
 ```
+```
+````
+
+Notes:
+- The project root is intentionally flat and centered around `app.py` and `models.py` (Flask-style single-module app).
+- The `static/` and `templates/` directories contain frontend assets and Jinja2 templates used by Flask; add new assets to the appropriate subdirectory.
+- `DEPLOYMENT.md`, `QUICKSTART.md`, and the GOOGLE_* docs contain environment-specific instructions — check them when setting up external services.
 
 ## 👥 Team Contributions
 
 ### Home Page - Tobias
-- Hero section with compelling call-to-action
-- Featured opportunities grid
-- Stats dashboard
-- Search bar integration
-- "How It Works" section
+- Hero section with call-to-action, featured opportunities grid, stats dashboard, search bar, "How It Works"
 
 ### Map/Browse Page - Sreehass
-- Interactive Google API map with markers
-- Sidebar with filters and search
-- Real-time opportunity filtering
-- Location-based recommendations
-- Category and date filtering
+- Interactive map with markers, sidebar filters, real-time filtering, location-based recommendations
 
 ### Booking System - Thomas
-- OpenTable-style time slot selection
-- Date picker interface
-- Booking form with validation
-- Booking summary
-- Confirmation flow
+- OpenTable-style time slot selection, date picker, booking form validation, confirmation flow
 
 ### Authentication & Volunteer Dashboard - Eshaan
-- User registration with validation
-- Secure login system
-- Password hashing
-- User dashboard with stats
-- Booking management
-- Volunteer history tracking
-- Profile settings
+- User registration and secure login, password hashing, dashboard with stats and booking management
 
-## 🛠️ Technology Stack
+## 🛠 Technology Stack
 
 **Backend:**
-- Flask 3.0.0 - Web framework
-- SQLAlchemy - ORM for database
-- Flask-Login - User authentication
-- SQLite - Database (development)
+- Flask 3.0.0
+- SQLAlchemy
+- Flask-Login
+- SQLite (development)
 
 **Frontend:**
 - HTML5/CSS3
 - JavaScript (ES6+)
-- Google Maps - Interactive maps
-- Responsive design
+- Google Maps (interactive maps)
 
-**Key Features:**
-- RESTful API design
+Security and best practices:
 - Password hashing with Werkzeug
-- Session management
 - CSRF protection
-- SQL injection prevention
+- Input validation and secure session management
 
-## 📱 Pages & Routes
+## 📄 Pages & Routes
 
-| Route | Description | Team Member |
-|-------|-------------|-------------|
+| Route | Description | Owner |
+|-------|-------------|-------|
 | `/` | Home page with featured opportunities | Tobias |
 | `/opportunities` | Interactive map view | Sreehass |
 | `/map` | Alias for opportunities | Sreehass |
@@ -161,64 +155,30 @@ volunteer-app/
 | `/dashboard` | User dashboard | Thomas |
 | `/search` | Search results | Shared |
 
-## 🗄️ Database Schema
+## 🗄 Database Schema (summary)
 
-### User Model
-- Email, username, password (hashed)
-- Profile information
-- Role (volunteer/admin/organization)
-- Created date and last login
+### User
+- Email, username, password (hashed), profile info, role, created/last login
 
-### Opportunity Model
-- Title, description, category
-- Date, time, duration
-- Location (address, lat/long)
-- Organization reference
-- Spots available/filled
+### Opportunity
+- Title, description, category, date/time, location (address, lat/long), organization, spots available
 
-### Booking Model
-- User and opportunity references
-- Booking time
-- Status (confirmed/cancelled/completed)
-- Emergency contact info
-- Notes
+### Booking
+- User & opportunity references, booking time, status (confirmed/cancelled/completed), notes
 
-### Organization Model
-- Name, description
-- Contact information
-- Logo and website
-- Verification status
+### Organization
+- Name, description, contact info, logo, verification status
 
-## 🎨 Design Features
+## 🎨 Design & Accessibility
 
-**Ocean-Inspired, Calming Theme:**
-- Teal and deep blue color palette
-- Professional and calming aesthetic
-- High-quality photo backgrounds
-- Parallax scrolling effects
-
-**Smooth Animations:**
-- Subtle hover effects
-- Smooth page transitions
-- Fade-in on scroll
-- Interactive button feedback
-
-**Accessibility:**
-- High contrast text
-- Keyboard navigation
-- Screen reader friendly
-- Responsive typography
+- Ocean-inspired color palette (teal/deep blue), parallax and smooth animations
+- Accessibility: high-contrast text, keyboard navigation, screen-reader friendly
 
 ## 🔒 Security Features
 
-- Password hashing with Werkzeug
-- CSRF protection
-- SQL injection prevention
-- XSS protection
-- Secure session management
-- Input validation
+- Password hashing, CSRF protection, SQL injection & XSS mitigations, secure session handling
 
-## 📊 Future Enhancements
+## 📈 Future Enhancements
 
 - [ ] Email notifications
 - [ ] Calendar integration (iCal export)
@@ -230,32 +190,22 @@ volunteer-app/
 - [ ] Review and rating system
 - [ ] Multi-language support
 
-
 ## 📝 License
 
 This project is licensed under the MIT License - see the LICENSE file for details.
 
-## 👨‍💻 Development Team
+## 👩‍💻 Development Team
 
-- **Tobias** - Home Page Development
-- **Sreehass** - Interactive Map & Browse Features
-- **Thomas** - Booking System
-- **Eshaan** - Authentication & Dashboard
+- Tobias — Home Page
+- Sreehass — Map & Browse
+- Thomas — Booking System
+- Eshaan — Authentication & Dashboard
 
-## 📧 Contact
+## ✉️ Contact
 
-For questions or feedback about this project:
-- GitHub Issues: [Create an issue](https://github.com/yourusername/volunteer-hub/issues)
+- GitHub Issues: https://github.com/tpan6/VolunteerHub/issues
 - Email: volunteerhub6@gmail.com
-
-## 🙏 Acknowledgments
-
-- Congressional App Challenge for this Constest
-- Unsplash for placeholder images
-- Google for mapping functionality
-- Flask community for excellent documentation
 
 ---
 
 **Built for the Congressional App Challenge 2025**
-# VolunteerHub

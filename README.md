@@ -12,14 +12,14 @@ VolunteerHub is a modern web platform that makes it easy for people to find, boo
 
 ### ✨ Key Features
 
-- ** Interactive Map** - Browse opportunities on an interactive map with location-based search
-- ** Smart Booking System** - OpenTable-style time slot selection for easy registration
-- ** User Dashboard** - Track volunteer hours, manage bookings, and view history
-- ** Advanced Search** - Filter by category, date, location, and duration
-- ** Responsive Design** - Works seamlessly on desktop, tablet, and mobile
-- ** Secure Authentication** - User registration and login with password hashing
-- ** Analytics** - Track impact with volunteer hour statistics and badges
-- ** Beautiful UI** - Ocean-inspired professional theme with smooth animations
+- **Interactive Map** - Browse opportunities on an interactive map with location-based search
+- **Smart Booking System** - OpenTable-style time slot selection for easy registration
+- **User Dashboard** - Track volunteer hours, manage bookings, and view history
+- **Advanced Search** - Filter by category, date, location, and duration
+- **Responsive Design** - Works seamlessly on desktop, tablet, and mobile
+- **Secure Authentication** - User registration and login with password hashing
+- **Analytics** - Track impact with volunteer hour statistics and badges
+- **Beautiful UI** - Ocean-inspired professional theme with smooth animations
 
 ## 🚀 Quick Start
 

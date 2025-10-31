@@ -12,14 +12,14 @@ VolunteerHub is a modern web platform that makes it easy for people to find, boo
 
 ### ✨ Key Features
 
-- **🗺️ Interactive Map** - Browse opportunities on an interactive map with location-based search
-- **📅 Smart Booking System** - OpenTable-style time slot selection for easy registration
-- **👤 User Dashboard** - Track volunteer hours, manage bookings, and view history
-- **🔍 Advanced Search** - Filter by category, date, location, and duration
-- **📱 Responsive Design** - Works seamlessly on desktop, tablet, and mobile
-- **🔐 Secure Authentication** - User registration and login with password hashing
-- **📊 Analytics** - Track impact with volunteer hour statistics and badges
-- **🎨 Beautiful UI** - Ocean-inspired professional theme with smooth animations
+- ** Interactive Map** - Browse opportunities on an interactive map with location-based search
+- ** Smart Booking System** - OpenTable-style time slot selection for easy registration
+- ** User Dashboard** - Track volunteer hours, manage bookings, and view history
+- ** Advanced Search** - Filter by category, date, location, and duration
+- ** Responsive Design** - Works seamlessly on desktop, tablet, and mobile
+- ** Secure Authentication** - User registration and login with password hashing
+- ** Analytics** - Track impact with volunteer hour statistics and badges
+- ** Beautiful UI** - Ocean-inspired professional theme with smooth animations
 
 ## 🚀 Quick Start
 
@@ -104,7 +104,7 @@ volunteer-app/
 - "How It Works" section
 
 ### Map/Browse Page - Sreehass
-- Interactive Leaflet.js map with markers
+- Interactive Google API map with markers
 - Sidebar with filters and search
 - Real-time opportunity filtering
 - Location-based recommendations
@@ -117,7 +117,7 @@ volunteer-app/
 - Booking summary
 - Confirmation flow
 
-### Authentication & Dashboard - Eshaan
+### Authentication & Volunteer Dashboard - Eshaan
 - User registration with validation
 - Secure login system
 - Password hashing
@@ -137,7 +137,7 @@ volunteer-app/
 **Frontend:**
 - HTML5/CSS3
 - JavaScript (ES6+)
-- Leaflet.js - Interactive maps
+- Google Maps - Interactive maps
 - Responsive design
 
 **Key Features:**
@@ -158,7 +158,7 @@ volunteer-app/
 | `/booking/<id>` | Booking page | Thomas |
 | `/login` | User login | Eshaan |
 | `/signup` | User registration | Eshaan |
-| `/dashboard` | User dashboard | Eshaan |
+| `/dashboard` | User dashboard | Thomas |
 | `/search` | Search results | Shared |
 
 ## 🗄️ Database Schema
@@ -191,7 +191,7 @@ volunteer-app/
 
 ## 🎨 Design Features
 
-**Ocean-Inspired Theme:**
+**Ocean-Inspired, Calming Theme:**
 - Teal and deep blue color palette
 - Professional and calming aesthetic
 - High-quality photo backgrounds
@@ -220,7 +220,6 @@ volunteer-app/
 
 ## 📊 Future Enhancements
 
-- [ ] Google OAuth integration
 - [ ] Email notifications
 - [ ] Calendar integration (iCal export)
 - [ ] Mobile app (React Native)
@@ -231,15 +230,6 @@ volunteer-app/
 - [ ] Review and rating system
 - [ ] Multi-language support
 
-## 🤝 Contributing
-
-This project was built for the Congressional App Challenge. If you'd like to contribute:
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
 
 ## 📝 License
 
@@ -256,16 +246,16 @@ This project is licensed under the MIT License - see the LICENSE file for detail
 
 For questions or feedback about this project:
 - GitHub Issues: [Create an issue](https://github.com/yourusername/volunteer-hub/issues)
-- Email: contact@volunteerhub.org
+- Email: volunteerhub6@gmail.com
 
 ## 🙏 Acknowledgments
 
-- Congressional App Challenge for the inspiration
+- Congressional App Challenge for this Constest
 - Unsplash for placeholder images
-- Leaflet.js for mapping functionality
+- Google for mapping functionality
 - Flask community for excellent documentation
 
 ---
 
-**Built with ❤️ for the Congressional App Challenge 2025**
+**Built for the Congressional App Challenge 2025**
 # VolunteerHub

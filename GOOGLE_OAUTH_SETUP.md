@@ -1,9 +1,5 @@
 # Google OAuth Setup Guide
 
-## Current Status
-
-⚠️ **Google OAuth is currently NOT configured** - The "Sign in with Google" button will not appear until you complete the setup below.
-
 ## Step 1: Create Google OAuth Credentials
 
 1. Go to [Google Cloud Console](https://console.cloud.google.com/)
@@ -27,17 +23,16 @@
 
 ## Step 2: Configure Your Application
 
-1. Your `.env` file already exists. Open it and update these values:
+1. Make `.env` file.
 
-2. **SECRET_KEY** - Already generated for you! ✅
+2. Make **SECRET_KEY**
    
-3. **GOOGLE_CLIENT_ID** - Already added! ✅
+3. Add **GOOGLE_CLIENT_ID**
 
 4. **GOOGLE_CLIENT_SECRET** - You need to add this:
    - Go to [Google Cloud Console Credentials](https://console.cloud.google.com/apis/credentials)
    - Click on your OAuth 2.0 Client ID name
    - Copy the **Client secret** value
-   - Paste it in your `.env` file where it says `PASTE_YOUR_CLIENT_SECRET_HERE`
 
 Your `.env` should look like:
 ```

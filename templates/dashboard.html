@@ -256,9 +256,9 @@
 
     <!-- Tabs -->
     <div class="dashboard-tabs">
-        <button class="tab active" onclick="showTab('upcoming')">Upcoming Bookings</button>
-        <button class="tab" onclick="showTab('history')">History</button>
-        <button class="tab" onclick="showTab('profile')">Profile</button>
+        <button type="button" class="tab active" onclick="showTab('upcoming')">Upcoming Bookings</button>
+        <button type="button" class="tab" onclick="showTab('history')">History</button>
+        <button type="button" class="tab" onclick="showTab('profile')">Profile</button>
     </div>
 
     <!-- Tab Content: Upcoming Bookings -->
@@ -290,7 +290,7 @@
                 </div>
                 <div class="booking-actions">
                     <a href="{{ url_for('opportunity_detail', id=booking_group.opportunity.id) }}" class="btn btn-secondary">View Details</a>
-                    <button onclick="cancelBookingGroup({{ booking_group.booking_ids|tojson }})" class="btn" style="background: #dc3545; color: white;">Cancel</button>
+                    <button type="button" onclick="cancelBookingGroup({{ booking_group.booking_ids|tojson }})" class="btn btn-danger">Cancel</button>
                 </div>
             </div>
             {% endfor %}

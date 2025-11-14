@@ -305,7 +305,7 @@
                 <div class="spots-label">spots available</div>
                 
                 {% if opportunity.is_full %}
-                    <button class="btn" disabled style="opacity: 0.6; cursor: not-allowed;">Fully Booked</button>
+                    <button class="btn btn-disabled" disabled>Fully Booked</button>
                 {% elif current_user.is_authenticated %}
                     <a href="{{ url_for('booking_page', opportunity_id=opportunity.id) }}" class="btn" style="display: block; text-decoration: none;">Book Your Spot</a>
                 {% else %}
@@ -317,9 +317,9 @@
             <div class="info-card" style="text-align: center;">
                 <h3>Share This Opportunity</h3>
                 <div style="display: flex; gap: 10px; justify-content: center;">
-                    <button onclick="shareOnFacebook()" style="padding: 10px 20px; background: #1877f2; color: white; border: none; border-radius: 6px; cursor: pointer;">Facebook</button>
-                    <button onclick="shareOnTwitter()" style="padding: 10px 20px; background: #1da1f2; color: white; border: none; border-radius: 6px; cursor: pointer;">Twitter</button>
-                    <button onclick="copyLink()" style="padding: 10px 20px; background: #6c757d; color: white; border: none; border-radius: 6px; cursor: pointer;">Copy Link</button>
+                    <button type="button" onclick="shareOnFacebook()" class="btn-social-facebook">Facebook</button>
+                    <button type="button" onclick="shareOnTwitter()" class="btn-social-twitter">Twitter</button>
+                    <button type="button" onclick="copyLink()" class="btn-social-copy">Copy Link</button>
                 </div>
             </div>
         </div>
@@ -342,7 +342,7 @@
 
     function copyLink() {
         navigator.clipboard.writeText(window.location.href);
-        alert('Link copied to clipboard!');
+        customSuccess('Link copied to clipboard!');
     }
 </script>
 {% endblock %}
